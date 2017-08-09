@@ -1,5 +1,3 @@
-#needs user prompts
-
 #importing necessary libs
 import os
 import time
@@ -27,19 +25,24 @@ options.add_experimental_option('prefs', {'credentials_enable_service': False,'p
 driver = webdriver.Chrome(currentPath + '\chromedriver.exe',chrome_options=options)
 
 print("[+] Starting login process")
-driver.get("https://cardiff.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx?embedded=0#maxResults=250&isSharedWithMe=true")
-driver.find_element_by_xpath('//*[@id="loginButton"]').click()
-driver.find_element_by_xpath('//*[@id="loginControl_externalLoginButton"]').click()
-driver.find_element_by_xpath('//*[@id="user_id"]').send_keys(username)
-driver.find_element_by_xpath('//*[@id="password"]').send_keys(password)
-driver.find_element_by_xpath('//*[@id="entry-login"]').click()
-
-# Wait for user to login
-while True:
-    time.sleep(3)
-    if driver.current_url == 'https://cardiff.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx?embedded=0#maxResults=250&isSharedWithMe=true':
-        print("[+] Logged in as "+username.upper())
-        break
+try:
+    driver.get("https://cardiff.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx?embedded=0#maxResults=250&isSharedWithMe=true")
+    driver.find_element_by_xpath('//*[@id="loginButton"]').click()
+    driver.find_element_by_xpath('//*[@id="loginControl_externalLoginButton"]').click()
+    driver.find_element_by_xpath('//*[@id="user_id"]').send_keys(username)
+    driver.find_element_by_xpath('//*[@id="password"]').send_keys(password)
+    driver.find_element_by_xpath('//*[@id="entry-login"]').click()
+    # Wait for user to login
+    while True:
+        time.sleep(3)
+        if driver.current_url == 'https://cardiff.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx?embedded=0#maxResults=250&isSharedWithMe=true':
+            print("[+] Logged in as "+username.upper())
+            break
+except:
+    # Error
+    print("[+] Unable to login - Restart script and try again with correct login details")
+    print("[!] Exiting the script")
+    exit()
 
 # Sleep to allow browser to load page fully (aspx)
 print("[+] Waiting for page to load")
